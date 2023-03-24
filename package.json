@@ -2,9 +2,7 @@
   "name": "mde-react-component-library",
   "version": "1.0.0",
   "description": "Collection of common React.js components for Virginia Tech MDE toolset.",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "rollup -c",
     "build-watch": "rollup -c -w",
