@@ -140,7 +140,7 @@ export function EmbedFileUrl( props: { url: string, className?: string, children
 }
 
 
-export default function TeamBrochure( props: Team ) {
+export function TeamBrochure( props: Team ) {
 
     console.log(`[${props.teamShortName}] poster URLs: ${JSON.stringify(props.posterUrl)}`)
 
