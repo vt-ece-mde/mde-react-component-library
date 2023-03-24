@@ -1,9 +1,11 @@
-export interface TeamMember
-{
+export interface Person {
     title: string    // Mr. Mrs. Dr. etc.
     lastName: string
     firstName: string
     email: string
+}
+
+export interface TeamMember extends Person {
     degree: string
     major: string
     hometown: string
@@ -12,20 +14,13 @@ export interface TeamMember
     courseComment: string
 }
 
-export interface Sponsor {
-    title: string; // Mr. Mrs. Dr. etc.
-    lastName: string;
-    firstName: string;
-    email: string;
-    company: string;
+export interface SME extends Person {
+    company: string; // The name of the SME's affiliation (e.g., "Virginia Tech").
 }
 
-export interface SME {
-    title: string; // Mr. Mrs. Dr. etc.
-    lastName: string;
-    firstName: string;
-    email: string;
-    company: string;
+export interface Sponsor {
+    name: string; // Name of company or organization.
+    people: Person[]; // List of people who are affiliated with this sponsor that helped with the project.
 }
 
 export interface Team
