@@ -1,0 +1,24 @@
+{
+  "name": "playground",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@types/node": "18.15.7",
+    "@types/react": "18.0.29",
+    "@types/react-dom": "18.0.11",
+    "autoprefixer": "file:../node_modules/autoprefixer",
+    "mde-react-component-library": "file:..",
+    "next": "13.2.4",
+    "postcss": "file:../node_modules/postcss",
+    "react": "file:../node_modules/react",
+    "react-dom": "file:../node_modules/react-dom",
+    "tailwindcss": "file:../node_modules/tailwindcss",
+    "typescript": "file:../node_modules/typescript"
+  }
+}
