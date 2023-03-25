@@ -133,74 +133,138 @@ export type EmbedFileUrlProps = {
     url?: string;
     className?: string;
     children?: any;
+    width?: string;
+    height?: string;
 }
 export function EmbedFileUrl( props: EmbedFileUrlProps ) {
     // Default to empty string if none provided.
     const url = props.url || '';
+    const width = props.width || "100%";
+    const height = props.height || "100%";
+
+    // Construct default classname.
+    const className = props.className !== undefined ? props.className : '';
+
+    // Gleaned from: https://stackoverflow.com/a/28735961
+    const matchYoutubeUrl = (url: string): string|false => {
+        var r = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+        const match = url.match(r);
+        return match ? match[1] : false;
+    }
+
+    // Gleaned from: https://stackoverflow.com/a/67153064
+    const matchVimeoUrl = (url: string): string|false => {
+        var r = /^(?:http|https)?:?\/?\/?(?:www\.)?(?:player\.)?vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|video\/|)(\d+)(?:|\/\?)$/;
+        const match = url.match(r);
+        return match ? match[1] : false;
+    }
 
     // Embed PowerPoint file using Microsoft online embedding URL.
     if (url.endsWith('.ppt') || url.endsWith('.pptx')) {
         return (<>
-            <iframe src={embedFileUrlPowerpoint(url)} width="100%" height="100%" className={props.className !== undefined ? props.className : ''}>
+            <iframe src={embedFileUrlPowerpoint(url)} width={width} height={height} className={className}>
                 {props.children}
             </iframe>
         </>);
     } 
+
     // Embed PDF using custom view query parameters.
-    else if (url.endsWith('.pdf')) {
+    if (url.endsWith('.pdf')) {
         return (<>
-            <object data={`${url}#view=FitV&toolbar=1&navpanes=1`} type="application/pdf" width="100%" height="100%" className={props.className !== undefined ? props.className : ''}>
+            <object data={`${url}#view=FitV&toolbar=1&navpanes=1`} type="application/pdf" width={width} height={height} className={className}>
                 {props.children}
             </object>
         </>);
     }
+
+    // Video file.
+    if (url.endsWith('.mp4') || url.endsWith('.webm')) {
+        const ext = url.split('.').slice(-1);
+        console.log(`[video] ${ext}`)
+        return (<>
+            <video controls width={width} height={height} className={className}>
+                <source src={url} type={`video/${ext}`} />
+                {props.children}
+            </video>
+        </>);
+    }
+
+    // Video is from Youtube.
+    const matchYouTube = matchYoutubeUrl(url);
+    if (matchYouTube) {
+        console.log('[video] Youtube')
+        // width="560" height="315"
+        return (<>
+            <iframe width={width} height={height} src={`https://www.youtube.com/embed/${matchYouTube}`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className={className}>
+                {props.children}
+            </iframe>
+        </>);
+    }
+
+    // Video is from Vimeo.
+    const matchVimeo = matchVimeoUrl(url);
+    if (matchVimeo) {
+        console.log('[video] Vimeo')
+        return (<>
+            <iframe width={width} height={height} src={`https://player.vimeo.com/video/${matchVimeo}`} title="Vimeo video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className={className}>
+                {props.children}
+            </iframe>
+        </>);
+    }
+
     // Embed everything else as an `object` tag with no special property type.
-    else {
-        return (<>
-            <object data={url} width="100%" height="100%" className={props.className !== undefined ? props.className : ''}>
-                {props.children}
-            </object>
-        </>);
-    }
+    return (<>
+        <object data={url} width={width} height={height} className={className}>
+            {props.children}
+        </object>
+    </>);
 }
 
 
 export type FileDisplayProps = {
     title: string;
     url?: string;
+    className?: string;
+    width?: string;
+    height?: string;
 }
 export function FileDisplay(props: FileDisplayProps) {
+    // Construct default classname.
+    const className = props.className !== undefined ? props.className : '';
+
     return (<>
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full items-center justify-center">
         <div className='flex flex-row items-center justify-center'>
             <div className='text-4xl font-bold text-center text-[#231F20]'>{props.title}</div>
             {props.url
                 ? (
                     <div className='pl-2'>
                         <a className='flex flex-row group relative' href={props.url} target="_blank" rel="noopener noreferrer">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                            </svg>
-                            <span className="items-center justify-center absolute hidden group-hover:flex -left-5 -top-2 -translate-y-full w-36 px-2 py-1 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:left-1/4 after:top-[100%] after:-translate-x-1/2 after:border-8 after:border-x-transparent after:border-b-transparent after:border-t-gray-700 hover:invisible">
-                                Download File
-                            </span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                        </svg>
+                        <span className="items-center justify-center absolute hidden group-hover:flex -left-5 -top-2 -translate-y-full w-36 px-2 py-1 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:left-1/4 after:top-[100%] after:-translate-x-1/2 after:border-8 after:border-x-transparent after:border-b-transparent after:border-t-gray-700 hover:invisible">
+                            Open in new tab
+                        </span>
                         </a>
                     </div>
                 )
                 : (null)
             }
         </div>
-        <EmbedFileUrl url={props.url} className="flex-1">
-            <div className='flex flex-col text-center justify-center bg-slate-100 w-[100%] h-[100%]'>
-                {props.url 
-                    ? (<>
-                        <p>We're sorry, but the file could not be displayed</p>
-                        <a href={props.url} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Open file in new window</a>
-                    </>) 
-                    : (<p>The file does not exist.</p>)
-                }
-            </div>
-        </EmbedFileUrl>
+        <div className={`flex-1 ${className}`}>
+            <EmbedFileUrl url={props.url} width={props.width} height={props.height} className='object-cover'>
+                <div className='flex flex-col text-center justify-center bg-slate-100 w-[100%] h-[100%]'>
+                    {props.url 
+                        ? (<>
+                            <p>We're sorry, but the file could not be displayed</p>
+                            <a href={props.url} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Open file in new tab</a>
+                        </>) 
+                        : (<p>The file does not exist.</p>)
+                    }
+                </div>
+            </EmbedFileUrl>
+        </div>
     </div>
     </>);
 }
@@ -218,7 +282,8 @@ export function TeamBrochure( props: TeamBrochureProps ) {
             <div className="mb-3 text-5xl text-[#83003F] text-left font-bold font-sans">{props.team.projectTitle}</div>
 
             {/* Project info */}
-            <div className="flex flex-row gap-4 pb-5">
+            <div className="flex flex-col lg:flex-row gap-4 pb-5">
+            {/* <div className="grid grid-cols-2 grid-flow-row gap-4 pb-5"> */}
                 <div className="min-w-[40rem]">
                     <TeamBrochurePhoto smes={props.team.smes} team_photo_names={props.team.teamPhotoNames} team_photo_url={props.team.teamPhotoUrl}/>
                 </div>
@@ -228,7 +293,7 @@ export function TeamBrochure( props: TeamBrochureProps ) {
             </div>
 
             {/* Team information */}
-            <div className="grid grid-rows-3 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 grid-flow-row gap-4">
                 <TeamMembers teamMembers={props.team.teamMembers}/>
             </div>
 
@@ -238,22 +303,21 @@ export function TeamBrochure( props: TeamBrochureProps ) {
             </div>
 
             <div className='pt-5'>
-                {/* <div className='flex flex-row space-x-8'> */}
-                <div className='grid grid-rows-2 grid-flow-col gap-4'>
+                <div className='grid grid-cols-3 grid-flow-row gap-6 p-8'>
 
                     {/* Poster */}
-                    <div className="row-span-2">
-                        <FileDisplay title="Poster" url={props.team.posterUrl}/>
+                    <div className="col-span-3 lg:col-span-2 row-span-2">
+                        <FileDisplay title="Poster" url={props.team.posterUrl} className="w-full"/>
                     </div>
 
                     {/* Presentation Slideshow */}
-                    <div className="col-span-1">
-                        <FileDisplay title="Presentation Slideshow" url={props.team.presentationSlideshowUrl}/>
+                    <div className="col-span-3 lg:col-span-1"> 
+                        <FileDisplay title="Presentation Slideshow" url={props.team.presentationSlideshowUrl} className="w-full h-full"/>
                     </div>
 
                     {/* Presentation Video Recording */}
-                    <div className="col-span-1">
-                        <FileDisplay title="Presentation Video" url={props.team.presentationVideoUrl}/>
+                    <div className="col-span-3 lg:col-span-1">
+                        <FileDisplay title="Presentation Video" url={props.team.presentationVideoUrl} className="w-full h-full" />
                     </div>
 
                 </div>
