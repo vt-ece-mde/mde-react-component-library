@@ -1,3 +1,4 @@
+import jsx from 'acorn-jsx';
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
@@ -23,6 +24,7 @@ export default [
         sourcemap: true,
       },
     ],
+    acornInjectPlugins: [jsx()],
     plugins: [
       resolve(),
       commonjs(),
@@ -35,6 +37,7 @@ export default [
     // input: "src/index.ts",
     // output: [{ file: "dist/index.d.ts", format: "esm" }],
     output: [{ file: "dist/esm/index.d.ts", format: "esm" }],
+    acornInjectPlugins: [jsx()],
     plugins: [dts({ tsconfig: "./tsconfig.json" })],
   },
 ];

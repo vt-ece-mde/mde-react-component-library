@@ -1,5 +1,5 @@
 import { Person, SME, Sponsor, Team, TeamMember } from "@/interfaces";
-import React from "react";
+// import React from "react";
 
 
 /**
