@@ -135,6 +135,7 @@ export type EmbedFileUrlProps = {
     children?: any;
     width?: string;
     height?: string;
+    type?: "image"|"pdf"|"ppt"|"video"|"youtube"|"vimeo";
 }
 export function EmbedFileUrl( props: EmbedFileUrlProps ) {
     // Default to empty string if none provided.
@@ -159,8 +160,19 @@ export function EmbedFileUrl( props: EmbedFileUrlProps ) {
         return match ? match[1] : false;
     }
 
+    // Image file.
+    if (props.type === "image" || url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.jpeg')) {
+        const ext = url.split('.').slice(-1);
+        console.log(`[image] ${ext}`)
+        return (<>
+            <img src={url} alt="image" className={className} width={width} height={height} />
+        </>);
+    }
+
     // Embed PowerPoint file using Microsoft online embedding URL.
-    if (url.endsWith('.ppt') || url.endsWith('.pptx')) {
+    if (props.type === "ppt" || url.endsWith('.ppt') || url.endsWith('.pptx')) {
+        const ext = url.split('.').slice(-1);
+        console.log(`[powerpoint] ${ext}`)
         return (<>
             <iframe src={embedFileUrlPowerpoint(url)} width={width} height={height} className={className}>
                 {props.children}
@@ -169,7 +181,9 @@ export function EmbedFileUrl( props: EmbedFileUrlProps ) {
     } 
 
     // Embed PDF using custom view query parameters.
-    if (url.endsWith('.pdf')) {
+    if (props.type === "pdf" ||url.endsWith('.pdf')) {
+        const ext = url.split('.').slice(-1);
+        console.log(`[pdf] ${ext}`)
         return (<>
             <object data={`${url}#view=FitV&toolbar=1&navpanes=1`} type="application/pdf" width={width} height={height} className={className}>
                 {props.children}
@@ -178,7 +192,7 @@ export function EmbedFileUrl( props: EmbedFileUrlProps ) {
     }
 
     // Video file.
-    if (url.endsWith('.mp4') || url.endsWith('.webm')) {
+    if (props.type === "video" ||url.endsWith('.mp4') || url.endsWith('.webm')) {
         const ext = url.split('.').slice(-1);
         console.log(`[video] ${ext}`)
         return (<>
@@ -191,7 +205,7 @@ export function EmbedFileUrl( props: EmbedFileUrlProps ) {
 
     // Video is from Youtube.
     const matchYouTube = matchYoutubeUrl(url);
-    if (matchYouTube) {
+    if (props.type === "youtube" || matchYouTube) {
         console.log('[video] Youtube')
         // width="560" height="315"
         return (<>
@@ -203,7 +217,7 @@ export function EmbedFileUrl( props: EmbedFileUrlProps ) {
 
     // Video is from Vimeo.
     const matchVimeo = matchVimeoUrl(url);
-    if (matchVimeo) {
+    if (props.type === "vimeo" ||matchVimeo) {
         console.log('[video] Vimeo')
         return (<>
             <iframe width={width} height={height} src={`https://player.vimeo.com/video/${matchVimeo}`} title="Vimeo video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className={className}>
@@ -214,9 +228,12 @@ export function EmbedFileUrl( props: EmbedFileUrlProps ) {
 
     // Embed everything else as an `object` tag with no special property type.
     return (<>
-        <object data={url} width={width} height={height} className={className}>
+        <iframe src={url} width={width} height={height} className={className}>
             {props.children}
-        </object>
+        </iframe>
+        {/* <object data={url} width={width} height={height} className={className}>
+            {props.children}
+        </object> */}
     </>);
 }
 
@@ -253,7 +270,7 @@ export function FileDisplay(props: FileDisplayProps) {
             }
         </div>
         <div className={`flex-1 ${className}`}>
-            <EmbedFileUrl url={props.url} width={props.width} height={props.height} className='object-cover'>
+            <EmbedFileUrl url={props.url} width={props.width} height={props.height}>
                 <div className='flex flex-col text-center justify-center bg-slate-100 w-[100%] h-[100%]'>
                     {props.url 
                         ? (<>
@@ -318,6 +335,35 @@ export function TeamBrochure( props: TeamBrochureProps ) {
                     <FileDisplay title="Presentation Video" url={props.team.presentationVideoUrl} className="w-full h-full" />
                 </div>
             </div>
+
+            {/* Extra files */}
+            {(props.team.extraContentUrls) ? (<>
+            <div className="pt-5 p-8">
+                {/* Header */}
+                <div className="flex flex-row gap-4">
+                    <hr className="h-px my-6 w-full border-gray-500 border-[0.1rem] rounded"></hr>
+                    <div className='text-4xl font-bold text-center text-[#231F20] whitespace-nowrap'>Extra Team Content</div>
+                    <hr className="h-px my-6 w-full border-gray-500 border-[0.1rem] rounded"></hr>
+                </div>
+                <div className="pt-4 grid grid-cols-1 lg:grid-cols-3 grid-flow-row gap-6">
+                    {props.team.extraContentUrls.map((url, i) => <>
+                    <div className="lg:col-span-1 min-h-[300px] max-h-[500px]">
+                        <EmbedFileUrl url={url} className="w-full h-full items-center justify-center">
+                            <div className='flex flex-col text-center justify-center bg-slate-100 w-[100%] h-[100%]'>
+                                {url 
+                                    ? (<>
+                                        <p>We're sorry, but the file could not be displayed</p>
+                                        <a href={url} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Open file in new tab</a>
+                                    </>) 
+                                    : (<p>The file does not exist.</p>)
+                                }
+                            </div>
+                        </EmbedFileUrl>
+                    </div>
+                    </>)}
+                </div>
+            </div>
+            </>) : null}
         </div>
     </>);
 }

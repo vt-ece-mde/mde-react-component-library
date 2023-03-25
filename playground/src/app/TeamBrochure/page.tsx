@@ -5,7 +5,7 @@ import type { Team, TeamMember, Sponsor, SME } from 'mde-react-component-library
 const lorem = new LoremIpsum({})
 
 const team: Team = {
-  teamMembers: [...Array(3)].map((_,i) => ({
+  teamMembers: [...Array(6)].map((_,i) => ({
     title: lorem.generateWords(1),
     lastName: lorem.generateWords(1),
     firstName: lorem.generateWords(1),
@@ -45,6 +45,18 @@ const team: Team = {
   posterUrl: "https://isotropic.org/papers/chicken.pdf",
   projectTitle: lorem.generateWords(5),
   teamShortName: lorem.generateWords(1),
+  extraContentUrls: [
+    "https://cataas.com/cat",
+    "https://www.youtube.com/watch?v=oznr-1-poSU&ab_channel=DiviExtended",
+    "https://vimeo.com/87110435",
+    "https://2050today.org/wp-content/uploads/2020/07/Video-Placeholder.mp4",
+    "https://2050today.org/wp-content/uploads/2020/07/Video-Placeholder.mp4",
+    "https://2050today.org/wp-content/uploads/2020/07/Video-Placeholder.mp4",
+    "https://2050today.org/wp-content/uploads/2020/07/Video-Placeholder.mp4",
+    "https://res.cloudinary.com/stealthman22/image/upload/v1586308023/new-portfolio/hero/two-cargo-ships-sailing-near-city-2144905.jpg",
+    "https://res.cloudinary.com/stealthman22/image/upload/v1586308023/new-portfolio/hero/two-cargo-ships-sailing-near-city-2144905.jpg",
+    "https://res.cloudinary.com/stealthman22/image/upload/v1586308023/new-portfolio/hero/two-cargo-ships-sailing-near-city-2144905.jpg",
+  ],
 }
 
 export default function Page() {

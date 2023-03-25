@@ -36,4 +36,5 @@ export interface Team
     posterUrl: string; // Expo poster.
     projectTitle: string; // Full name of project (70 char limit).
     teamShortName: string; // This is a short-hand name used for the team (should not contain spaces or special characters).
+    extraContentUrls: string[]; // List of URLs to extra content files.
 }
