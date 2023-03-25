@@ -28,12 +28,12 @@ export interface Team
     teamMembers: TeamMember[];
     sponsors: Sponsor[];
     smes: SME[];
-    projectSummary: string;
+    projectSummary: string; // Paragraph description of project.
     teamPhotoNames: string | string[] | string[][]; // Supports string, array for multi-line strings, and 2D array as CSV input.
-    teamPhotoUrl: string; // Supports alternate URLs as fallbacks.
-    videoUrl: string | string[]; // Supports alternate URLs as fallbacks.
-    presentationUrl: string; // Supports alternate URLs as fallbacks.
-    posterUrl: string; // Supports alternate URLs as fallbacks.
-    projectTitle: string;
+    teamPhotoUrl: string; // Professional picture of all team members.
+    presentationVideoUrl: string; // Expo presentation video recording.
+    presentationSlideshowUrl: string; // Expo presentation slideshow.
+    posterUrl: string; // Expo poster.
+    projectTitle: string; // Full name of project (70 char limit).
     teamShortName: string; // This is a short-hand name used for the team (should not contain spaces or special characters).
 }
