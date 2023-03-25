@@ -34,7 +34,7 @@ const team: Team = {
     email: lorem.generateWords(1),
     company: lorem.generateWords(1),
   } as SME)),
-  projectSummary: lorem.generateWords(5),
+  projectSummary: lorem.generateWords(100),
   teamPhotoNames: lorem.generateWords(5),
   teamPhotoUrl: "https://cataas.com/cat",
   presentationVideoUrl: "https://www.youtube.com/watch?v=oznr-1-poSU&ab_channel=DiviExtended",
