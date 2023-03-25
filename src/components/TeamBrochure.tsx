@@ -1,4 +1,4 @@
-import { SME, Sponsor, Team, TeamMember } from "@/interfaces";
+import { Person, SME, Sponsor, Team, TeamMember } from "@/interfaces";
 import React from "react";
 
 
@@ -6,7 +6,11 @@ import React from "react";
  * Simple component to display a paragraph element with text that possible contains newlines ('\n').
  * Inspired by: https://stackoverflow.com/a/73056801
  */
-export function MultilineParagraph(props: { text: string, className?: string }) {
+export type MultilineParagraphProps = {
+    text: string;
+    className?: string;
+}
+export function MultilineParagraph(props: MultilineParagraphProps) {
     return (<>
     <div>{props.text.split(/\n|\r\n/).map((segment: string, index: number) => (
         <>
@@ -54,7 +58,10 @@ export function TeamBrochurePhoto( props: TeamBrochurePhotoProps ) {
 }
 
 
-export function TeamChallenge( props: { project_summary: string } ) {
+export type TeamChallengeProps = {
+    project_summary: string;
+}
+export function TeamChallenge( props: TeamChallengeProps ) {
     return (<>
         <div className='flex flex-col space-y-2'>
             <div className="text-[#008891] text-3xl font-normal font-sans">CHALLENGE</div>
@@ -63,43 +70,55 @@ export function TeamChallenge( props: { project_summary: string } ) {
     </>);
 }
 
-
-export function TeamMemberInfo( props: TeamMember ) {
+export type TeamMemberInfoProps = {
+    teamMember: TeamMember;
+}
+export function TeamMemberInfo( props: TeamMemberInfoProps ) {
     return (<>
         <div className='flex flex-row space-x-3 items-end'>
-            <span className="text-[#008891] text-4xl font-bold font-sans">{`${props.firstName} ${props.lastName}`}</span>
-            <span className="text-[#939598] text-lg font-sans">{`${props.hometown}, ${props.StateOrCountry}`}</span>
+            <span className="text-[#008891] text-4xl font-bold font-sans">{`${props.teamMember.firstName} ${props.teamMember.lastName}`}</span>
+            <span className="text-[#939598] text-lg font-sans">{`${props.teamMember.hometown}, ${props.teamMember.StateOrCountry}`}</span>
         </div>
         <div className="my-2 w-full border-b-2 border-orange-500 rounded"></div>
-        <div className="-mt-2 text-[#F57F28] text-lg font-bold font-sans">{props.degree}, {props.major}</div>
+        <div className="-mt-2 text-[#F57F28] text-lg font-bold font-sans">{props.teamMember.degree}, {props.teamMember.major}</div>
         <div className="pt-2 text-[#231F20] text-xl font-bold font-sans">
-            Aspirations: <span className="text-[#231F20] text-lg font-sans font-normal">{props.aspiration}</span>
+            Aspirations: <span className="text-[#231F20] text-lg font-sans font-normal">{props.teamMember.aspiration}</span>
         </div>
         <div className="pt-2 text-[#231F20] text-xl font-bold font-sans">
-            Class Comment: <span className="text-[#231F20] text-lg font-sans font-normal">{props.courseComment}</span>
+            Class Comment: <span className="text-[#231F20] text-lg font-sans font-normal">{props.teamMember.courseComment}</span>
         </div>
     </>);
 }
 
-
-export function TeamMembers( props: { team_members: TeamMember[] } ) {
+export type TeamMembersProps = {
+    teamMembers: TeamMember[];
+}
+export function TeamMembers( props: TeamMembersProps ) {
     return (<>
-        {props.team_members.map((tm, index) => {
+        {props.teamMembers.map((tm, index) => {
             return (
                 <div key={`tm-${index}`}>
-                    <TeamMemberInfo {...tm} />
+                    <TeamMemberInfo teamMember={tm} />
                 </div>
             );
         })}
     </>);
 }
 
-
-export function TeamProjectSponsors( props: { sponsors: Sponsor[] } ) {
+export type TeamProjectSponsorPeopleProps = {
+    sponsors: Sponsor[];
+}
+export function TeamProjectSponsorPeople( props: TeamProjectSponsorPeopleProps ) {
+    // Build list of people with their associated sponsor name.
+    const company_person: { company: string, person: Person }[] = props.sponsors.map(sponsor => sponsor.people.map(person => ({
+        company: sponsor.name,
+        person,
+    }))).flat().sort((a, b) => a.company.localeCompare(b.company) || a.person.firstName.localeCompare(b.person.firstName) || a.person.lastName.localeCompare(b.person.lastName));
+    // const people = props.sponsors.map(({ people }) => people).flat().sort((a, b) => a.firstName.localeCompare(b.firstName)); // Get flattened list of people, sorted in alphabetic order by first name.
     const prefix: string = (props.sponsors.length === 0) ? 'PROJECT SPONSOR' : 'PROJECT SPONSORS';
     return (<>
         <div className="text-[#939598] text-left font-sans text-2xl">
-            {prefix}: <span className="text-[#83003F]">{props.sponsors.map(sponsor => `${sponsor.title} ${sponsor.firstName} ${sponsor.lastName}`).join(', ')}</span>
+            {prefix}: <span className="text-[#83003F]">{company_person.map(cp => `${cp.person.title} ${cp.person.firstName} ${cp.person.lastName} (${cp.company})`).join(', ')}</span>
         </div>
     </>);
 }
@@ -110,8 +129,12 @@ function embedFileUrlPowerpoint(url: string): string {
     return `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
 }
 
-
-export function EmbedFileUrl( props: { url: string, className?: string, children?: any} ) {
+export type EmbedFileUrlProps = {
+    url: string;
+    className?: string;
+    children?: any;
+}
+export function EmbedFileUrl( props: EmbedFileUrlProps ) {
 
     // Embed PowerPoint file using Microsoft online embedding URL.
     if (props.url.endsWith('.ppt') || props.url.endsWith('.pptx')) {
@@ -140,34 +163,35 @@ export function EmbedFileUrl( props: { url: string, className?: string, children
 }
 
 
-export function TeamBrochure( props: Team ) {
 
-    console.log(`[${props.teamShortName}] poster URLs: ${JSON.stringify(props.posterUrl)}`)
-
+export type TeamBrochureProps = {
+    team: Team;
+}
+export function TeamBrochure( props: TeamBrochureProps ) {
     return (<>
         <div className="p-5 grid grid-cols-1 gap-4">
 
             {/* Project name */}
-            <div className="mb-3 text-5xl text-[#83003F] text-left font-bold font-sans">{props.projectTitle}</div>
+            <div className="mb-3 text-5xl text-[#83003F] text-left font-bold font-sans">{props.team.projectTitle}</div>
 
             {/* Project info */}
             <div className="flex flex-row gap-4 pb-5">
                 <div className="min-w-[40rem]">
-                    <TeamBrochurePhoto smes={props.smes} team_photo_names={props.teamPhotoNames} team_photo_url={props.teamPhotoUrl}/>
+                    <TeamBrochurePhoto smes={props.team.smes} team_photo_names={props.team.teamPhotoNames} team_photo_url={props.team.teamPhotoUrl}/>
                 </div>
                 <div className="text-left">
-                    <TeamChallenge project_summary={props.projectSummary} />
+                    <TeamChallenge project_summary={props.team.projectSummary} />
                 </div>
             </div>
 
             {/* Team information */}
             <div className="grid grid-cols-3 gap-4">
-                <TeamMembers team_members={props.teamMembers}/>
+                <TeamMembers teamMembers={props.team.teamMembers}/>
             </div>
 
             {/* Sponsor information */}
             <div className="pt-5">
-                <TeamProjectSponsors sponsors={props.sponsors}/>
+                <TeamProjectSponsorPeople sponsors={props.team.sponsors}/>
             </div>
 
             <div className='pt-5'>
@@ -175,10 +199,10 @@ export function TeamBrochure( props: Team ) {
                     <div className='flex flex-col w-1/2 h-[600px] space-y-2'>
                         <div className='flex flex-row items-center justify-center'>
                             <div className='text-4xl font-bold text-center text-[#231F20]'>Poster</div>
-                            {props.posterUrl
+                            {props.team.posterUrl
                                 ? (
                                     <div className='pl-2'>
-                                        <a className='flex flex-row group relative' href={props.posterUrl} target="_blank" rel="noopener noreferrer">
+                                        <a className='flex flex-row group relative' href={props.team.posterUrl} target="_blank" rel="noopener noreferrer">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                             </svg>
@@ -191,12 +215,12 @@ export function TeamBrochure( props: Team ) {
                                 : (null)
                             }
                         </div>
-                        <EmbedFileUrl url={props.posterUrl}>
+                        <EmbedFileUrl url={props.team.posterUrl}>
                             <div className='flex flex-col text-center justify-center bg-slate-100 w-[100%] h-[100%]'>
-                                {props.posterUrl 
+                                {props.team.posterUrl 
                                     ? (<>
                                         <p>We're sorry, but the file could not be displayed</p>
-                                        <a href={props.posterUrl} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Open file in new window</a>
+                                        <a href={props.team.posterUrl} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Open file in new window</a>
                                     </>) 
                                     : (<p>The file does not exist.</p>)
                                 }
@@ -206,10 +230,10 @@ export function TeamBrochure( props: Team ) {
                     <div className='flex flex-col w-1/2 h-[600px] space-y-2'>
                         <div className='flex flex-row items-center justify-center'>
                             <div className='text-4xl font-bold text-center text-[#231F20]'>Presentation</div>
-                            {props.presentationUrl
+                            {props.team.presentationUrl
                                 ? (
                                     <div className='pl-2'>
-                                        <a className='flex flex-row group relative' href={props.presentationUrl} target="_blank" rel="noopener noreferrer">
+                                        <a className='flex flex-row group relative' href={props.team.presentationUrl} target="_blank" rel="noopener noreferrer">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                             </svg>
@@ -222,12 +246,12 @@ export function TeamBrochure( props: Team ) {
                                 : (null)
                             }
                         </div>
-                        <EmbedFileUrl url={props.presentationUrl}>
+                        <EmbedFileUrl url={props.team.presentationUrl}>
                             <div className='flex flex-col text-center justify-center bg-slate-100 w-[100%] h-[100%]'>
-                                {props.presentationUrl 
+                                {props.team.presentationUrl 
                                 ? (<>
                                     <p>We're sorry, but the file could not be displayed</p>
-                                    <a href={props.presentationUrl} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Open file in new window</a>
+                                    <a href={props.team.presentationUrl} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Open file in new window</a>
                                 </>) 
                                 : (<p>The file does not exist.</p>)
                                 }
