@@ -282,8 +282,7 @@ export function TeamBrochure( props: TeamBrochureProps ) {
             <div className="mb-3 text-5xl text-[#83003F] text-left font-bold font-sans">{props.team.projectTitle}</div>
 
             {/* Project info */}
-            <div className="flex flex-col lg:flex-row gap-4 pb-5">
-            {/* <div className="grid grid-cols-2 grid-flow-row gap-4 pb-5"> */}
+            <div className="flex flex-col lg:flex-row gap-4">
                 <div className="min-w-[40rem]">
                     <TeamBrochurePhoto smes={props.team.smes} team_photo_names={props.team.teamPhotoNames} team_photo_url={props.team.teamPhotoUrl}/>
                 </div>
@@ -293,7 +292,7 @@ export function TeamBrochure( props: TeamBrochureProps ) {
             </div>
 
             {/* Team information */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 grid-flow-row gap-4">
+            <div className="pt-5 grid grid-cols-1 lg:grid-cols-3 grid-flow-row gap-4">
                 <TeamMembers teamMembers={props.team.teamMembers}/>
             </div>
 
@@ -302,24 +301,21 @@ export function TeamBrochure( props: TeamBrochureProps ) {
                 <TeamProjectSponsorPeople sponsors={props.team.sponsors}/>
             </div>
 
-            <div className='pt-5'>
-                <div className='grid grid-cols-3 lg:grid-cols-2 grid-flow-row gap-6 p-8'>
+            {/* Expo file grid */}
+            <div className='pt-5 grid grid-cols-3 lg:grid-cols-2 grid-flow-row gap-6 p-8'>
+                {/* Poster */}
+                <div className="col-span-3 h-[500px] lg:col-span-1 lg:h-[800px] row-span-2">
+                    <FileDisplay title="Poster" url={props.team.posterUrl} className="w-full"/>
+                </div>
 
-                    {/* Poster */}
-                    <div className="col-span-3 h-[500px] lg:col-span-1 lg:h-[800px] row-span-2">
-                        <FileDisplay title="Poster" url={props.team.posterUrl} className="w-full"/>
-                    </div>
+                {/* Presentation Slideshow */}
+                <div className="col-span-3 h-[500px] lg:h-auto lg:col-span-1"> 
+                    <FileDisplay title="Presentation Slideshow" url={props.team.presentationSlideshowUrl} className="w-full h-full"/>
+                </div>
 
-                    {/* Presentation Slideshow */}
-                    <div className="col-span-3 h-[500px] lg:h-auto lg:col-span-1"> 
-                        <FileDisplay title="Presentation Slideshow" url={props.team.presentationSlideshowUrl} className="w-full h-full"/>
-                    </div>
-
-                    {/* Presentation Video Recording */}
-                    <div className="col-span-3 h-[500px] lg:h-auto lg:col-span-1">
-                        <FileDisplay title="Presentation Video" url={props.team.presentationVideoUrl} className="w-full h-full" />
-                    </div>
-
+                {/* Presentation Video Recording */}
+                <div className="col-span-3 h-[500px] lg:h-auto lg:col-span-1">
+                    <FileDisplay title="Presentation Video" url={props.team.presentationVideoUrl} className="w-full h-full" />
                 </div>
             </div>
         </div>
