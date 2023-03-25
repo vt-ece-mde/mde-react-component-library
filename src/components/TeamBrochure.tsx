@@ -303,10 +303,10 @@ export function TeamBrochure( props: TeamBrochureProps ) {
             </div>
 
             <div className='pt-5'>
-                <div className='grid grid-cols-3 grid-flow-row gap-6 p-8'>
+                <div className='grid grid-cols-3 lg:grid-cols-2 grid-flow-row gap-6 p-8'>
 
                     {/* Poster */}
-                    <div className="col-span-3 lg:col-span-2 row-span-2">
+                    <div className="col-span-3 lg:col-span-1 row-span-2">
                         <FileDisplay title="Poster" url={props.team.posterUrl} className="w-full"/>
                     </div>
 
