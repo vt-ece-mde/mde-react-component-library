@@ -5,6 +5,9 @@ import dts from "rollup-plugin-dts";
 
 // const packageJson = require("./package.json");
 
+// import packageJson from './package.json';
+// import tsconfigJson from './tsconfig.json';
+
 export default [
   {
     input: "src/index.ts",
@@ -23,13 +26,15 @@ export default [
     plugins: [
       resolve(),
       commonjs(),
-      typescript({ tsconfig: "./tsconfig.json", exclude: ["**/playground/**"]}),
+      typescript({ tsconfig: "./tsconfig.json", exclude: ["**/playground/**"] }),
     ],
     external: ["react", "react-dom"],
   },
   {
     input: "dist/esm/types/index.d.ts",
-    output: [{ file: "dist/index.d.ts", format: "esm" }],
-    plugins: [dts()],
+    // input: "src/index.ts",
+    // output: [{ file: "dist/index.d.ts", format: "esm" }],
+    output: [{ file: "dist/esm/index.d.ts", format: "esm" }],
+    plugins: [dts({ tsconfig: "./tsconfig.json" })],
   },
 ];
