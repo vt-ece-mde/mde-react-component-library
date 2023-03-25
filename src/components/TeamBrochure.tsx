@@ -306,17 +306,17 @@ export function TeamBrochure( props: TeamBrochureProps ) {
                 <div className='grid grid-cols-3 lg:grid-cols-2 grid-flow-row gap-6 p-8'>
 
                     {/* Poster */}
-                    <div className="col-span-3 lg:col-span-1 row-span-2">
+                    <div className="col-span-3 h-[500px] lg:col-span-1 lg:h-[800px] row-span-2">
                         <FileDisplay title="Poster" url={props.team.posterUrl} className="w-full"/>
                     </div>
 
                     {/* Presentation Slideshow */}
-                    <div className="col-span-3 lg:col-span-1"> 
+                    <div className="col-span-3 h-[500px] lg:h-auto lg:col-span-1"> 
                         <FileDisplay title="Presentation Slideshow" url={props.team.presentationSlideshowUrl} className="w-full h-full"/>
                     </div>
 
                     {/* Presentation Video Recording */}
-                    <div className="col-span-3 lg:col-span-1">
+                    <div className="col-span-3 h-[500px] lg:h-auto lg:col-span-1">
                         <FileDisplay title="Presentation Video" url={props.team.presentationVideoUrl} className="w-full h-full" />
                     </div>
 
