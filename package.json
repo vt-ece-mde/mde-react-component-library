@@ -6,6 +6,7 @@
   "scripts": {
     "build": "rollup -c",
     "build-watch": "rollup -c -w",
+    "prepare": "npm run build",
     "start-playground": "cd playground && npm run dev",
     "i-all": "npm i && cd playground && npm i",
     "dev": "npm-run-all --parallel build-watch start-playground",
