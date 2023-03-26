@@ -286,96 +286,106 @@ export function FileDisplay(props: FileDisplayProps) {
     </>);
 }
 
+/**
+ * Checks if a given URL string is a valid URL.
+ */
+export const validateUrl = (url: string): boolean => {
+    try {
+        new URL(url); // If this passes then string is a valid URL.
+        return true;
+    }
+    catch (error: any) {
+        return false;
+    }
+}
+
+/**
+ * Treats any URLs that are "invalid" as relative and prepends a base string to them.
+ */
+export const applyRelativeUrlCorrection = (url: string, base: string, validateCallback?: (url: string) => boolean): string => {
+    const vcb = validateCallback || validateUrl;
+    return vcb(url) ? url : (new URL(url, base.replace(/\/$|$/, '/') /* Ensure base has trailing slash */)).toString();
+}
 
 
 export type TeamBrochureProps = {
     team: Team;
     correctRelativeUrlBase?: string; // Treats all URLs that do not start with "http://" as a relative URL and prepends this string as "base/relative_url" to correct for relative URLs.
+    correctRelativeUrlApplyCallback?: (url: string, base: string, validateCallback?: (url: string) => boolean) => string,
+    correctRelativeUrlValidateCallback?: (url: string) => boolean,
 }
 export function TeamBrochure( props: TeamBrochureProps ) {
     // Reference to team object.
     let team: Team = props.team;
 
-    // Checks if a given URL string is a valid URL.
-    const validateUrl = (url: string): boolean => {
-        try {
-            new URL(url); // If this passes then string is a valid URL.
-            return true;
-        }
-        catch (error: any) {
-            return false;
-        }
-    }
-
-    // Treats any URLs that are "invalid" as relative and prepends a base string to them.
-    const applyRelativeUrlCorrection = (url: string, base: string): string => {
-        return validateUrl(url) ? url : (new URL(url, base)).toString();
-    }
+    // Callback functions.
+    const correctRelativeUrlApplyCallback = props.correctRelativeUrlApplyCallback || applyRelativeUrlCorrection;
+    const correctRelativeUrlValidateCallback = props.correctRelativeUrlValidateCallback || validateUrl;
 
     // Apply relative URL correction if desired.
     if (!!props.correctRelativeUrlBase) {
         if (!validateUrl(props.correctRelativeUrlBase)) {
             throw Error('Team brochure relative URL base is not a valid URL stub')
         }
-        team.teamPhotoUrl = applyRelativeUrlCorrection(team.teamPhotoUrl, props.correctRelativeUrlBase);
-        team.teamPhotoUrl = applyRelativeUrlCorrection(team.teamPhotoUrl, props.correctRelativeUrlBase);
-        team.presentationVideoUrl = applyRelativeUrlCorrection(team.presentationVideoUrl, props.correctRelativeUrlBase);
-        team.presentationSlideshowUrl = applyRelativeUrlCorrection(team.presentationSlideshowUrl, props.correctRelativeUrlBase);
-        team.posterUrl = applyRelativeUrlCorrection(team.posterUrl, props.correctRelativeUrlBase);
-        team.extraContentUrls = team.extraContentUrls.map(url => applyRelativeUrlCorrection(url, props.correctRelativeUrlBase!));
+        team.teamPhotoUrl = correctRelativeUrlApplyCallback(team.teamPhotoUrl, props.correctRelativeUrlBase, correctRelativeUrlValidateCallback);
+        team.teamPhotoUrl = correctRelativeUrlApplyCallback(team.teamPhotoUrl, props.correctRelativeUrlBase, correctRelativeUrlValidateCallback);
+        team.presentationVideoUrl = correctRelativeUrlApplyCallback(team.presentationVideoUrl, props.correctRelativeUrlBase, correctRelativeUrlValidateCallback);
+        team.presentationSlideshowUrl = correctRelativeUrlApplyCallback(team.presentationSlideshowUrl, props.correctRelativeUrlBase, correctRelativeUrlValidateCallback);
+        team.posterUrl = correctRelativeUrlApplyCallback(team.posterUrl, props.correctRelativeUrlBase, correctRelativeUrlValidateCallback);
+        team.extraContentUrls = team.extraContentUrls.map(url => correctRelativeUrlApplyCallback(url, props.correctRelativeUrlBase!, correctRelativeUrlValidateCallback));
     }
 
     return (<>
         <div className="p-5 grid grid-cols-1 gap-4">
 
             {/* Project name */}
-            <div className="mb-3 text-5xl text-[#83003F] text-left font-bold font-sans">{props.team.projectTitle}</div>
+            <div className="mb-3 text-5xl text-[#83003F] text-left font-bold font-sans">{team.projectTitle}</div>
 
             {/* Project info */}
             <div className="flex flex-col lg:flex-row gap-4">
                 <div className="min-w-[40rem]">
-                    <TeamBrochurePhoto smes={props.team.smes} team_photo_names={props.team.teamPhotoNames} team_photo_url={props.team.teamPhotoUrl}/>
+                    <TeamBrochurePhoto smes={team.smes} team_photo_names={team.teamPhotoNames} team_photo_url={team.teamPhotoUrl}/>
                 </div>
                 <div className="text-left">
-                    <TeamChallenge project_summary={props.team.projectSummary} />
+                    <TeamChallenge project_summary={team.projectSummary} />
                 </div>
             </div>
 
             {/* Team information */}
             <div className="pt-5 grid grid-cols-1 lg:grid-cols-3 grid-flow-row gap-4">
-                <TeamMembers teamMembers={props.team.teamMembers}/>
+                <TeamMembers teamMembers={team.teamMembers}/>
             </div>
 
             {/* Sponsor information */}
             <div className="pt-5">
-                <TeamProjectSponsorPeople sponsors={props.team.sponsors}/>
+                <TeamProjectSponsorPeople sponsors={team.sponsors}/>
             </div>
 
             {/* Expo file grid */}
             <div className='pt-5 grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 p-8'>
 
                 {/* Poster */}
-                <div className={"col-span-1 h-[500px] lg:h-[800px] row-span-1 " + ((!!props.team.presentationSlideshowUrl || !!props.team.presentationVideoUrl) ? "lg:col-span-1" : "lg:col-span-2") + " " + ((!!props.team.presentationSlideshowUrl && !!props.team.presentationVideoUrl) ? "row-span-2": "row-span-1")}>
-                    <FileDisplay title="Poster" url={props.team.posterUrl} className="w-full h-full" />
+                <div className={"col-span-1 h-[500px] lg:h-[800px] row-span-1 " + ((!!team.presentationSlideshowUrl || !!team.presentationVideoUrl) ? "lg:col-span-1" : "lg:col-span-2") + " " + ((!!team.presentationSlideshowUrl && !!team.presentationVideoUrl) ? "row-span-2": "row-span-1")}>
+                    <FileDisplay title="Poster" url={team.posterUrl} className="w-full h-full" />
                 </div>
 
                 {/* Presentation Slideshow */}
-                {(!!props.team.presentationSlideshowUrl) ? (<>
+                {(!!team.presentationSlideshowUrl) ? (<>
                 <div className="col-span-1 h-[500px] lg:h-auto"> 
-                    <FileDisplay title="Presentation Slideshow" url={props.team.presentationSlideshowUrl} className="w-full h-full"/>
+                    <FileDisplay title="Presentation Slideshow" url={team.presentationSlideshowUrl} className="w-full h-full"/>
                 </div>
                 </>) : null}
 
                 {/* Presentation Video Recording */}
-                {(!!props.team.presentationVideoUrl) ? (<>
+                {(!!team.presentationVideoUrl) ? (<>
                 <div className="col-span-1 h-[500px] lg:h-auto">
-                    <FileDisplay title="Presentation Video" url={props.team.presentationVideoUrl} className="w-full h-full" />
+                    <FileDisplay title="Presentation Video" url={team.presentationVideoUrl} className="w-full h-full" />
                 </div>
                 </>) : null}
             </div>
 
             {/* Extra files */}
-            {(props.team.extraContentUrls !== undefined && props.team.extraContentUrls.length > 0) ? (<>
+            {(team.extraContentUrls !== undefined && team.extraContentUrls.length > 0) ? (<>
             <div className="pt-5 p-8">
                 {/* Header */}
                 <div className="flex flex-row gap-4">
@@ -384,7 +394,7 @@ export function TeamBrochure( props: TeamBrochureProps ) {
                     <hr className="h-px my-6 w-full border-gray-500 border-[0.1rem] rounded"></hr>
                 </div>
                 <div className="pt-4 grid grid-cols-1 lg:grid-cols-3 grid-flow-row gap-6">
-                    {props.team.extraContentUrls.map((url, i) => <>
+                    {team.extraContentUrls.map((url, i) => <>
                     <div className="lg:col-span-1 min-h-[300px] max-h-[500px]">
                         <EmbedFileUrl url={url} className="w-full h-full items-center justify-center">
                             <div className='flex flex-col text-center justify-center bg-slate-100 w-[100%] h-[100%]'>
