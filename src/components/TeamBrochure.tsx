@@ -337,7 +337,7 @@ export function TeamBrochure( props: TeamBrochureProps ) {
             </div>
 
             {/* Extra files */}
-            {(props.team.extraContentUrls) ? (<>
+            {(props.team.extraContentUrls !== undefined && props.team.extraContentUrls.length > 0) ? (<>
             <div className="pt-5 p-8">
                 {/* Header */}
                 <div className="flex flex-row gap-4">
