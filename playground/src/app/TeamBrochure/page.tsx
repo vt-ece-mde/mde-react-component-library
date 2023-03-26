@@ -56,14 +56,13 @@ const team: Team = {
     "https://2050today.org/wp-content/uploads/2020/07/Video-Placeholder.mp4",
     "https://res.cloudinary.com/stealthman22/image/upload/v1586308023/new-portfolio/hero/two-cargo-ships-sailing-near-city-2144905.jpg",
     "https://res.cloudinary.com/stealthman22/image/upload/v1586308023/new-portfolio/hero/two-cargo-ships-sailing-near-city-2144905.jpg",
-    "https://res.cloudinary.com/stealthman22/image/upload/v1586308023/new-portfolio/hero/two-cargo-ships-sailing-near-city-2144905.jpg",
   ],
 }
 
 export default function Page() {
   return (
     <div className="text-3xl">
-      <TeamBrochure team={team} />
+      <TeamBrochure team={team} correctRelativeUrlBase={'http://localhost'} />
     </div>
   )
 }

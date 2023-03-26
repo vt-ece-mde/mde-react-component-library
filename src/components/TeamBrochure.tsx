@@ -290,8 +290,41 @@ export function FileDisplay(props: FileDisplayProps) {
 
 export type TeamBrochureProps = {
     team: Team;
+    correctRelativeUrlBase?: string; // Treats all URLs that do not start with "http://" as a relative URL and prepends this string as "base/relative_url" to correct for relative URLs.
 }
 export function TeamBrochure( props: TeamBrochureProps ) {
+    // Reference to team object.
+    let team: Team = props.team;
+
+    // Checks if a given URL string is a valid URL.
+    const validateUrl = (url: string): boolean => {
+        try {
+            new URL(url); // If this passes then string is a valid URL.
+            return true;
+        }
+        catch (error: any) {
+            return false;
+        }
+    }
+
+    // Treats any URLs that are "invalid" as relative and prepends a base string to them.
+    const applyRelativeUrlCorrection = (url: string, base: string): string => {
+        return validateUrl(url) ? url : (new URL(url, base)).toString();
+    }
+
+    // Apply relative URL correction if desired.
+    if (!!props.correctRelativeUrlBase) {
+        if (!validateUrl(props.correctRelativeUrlBase)) {
+            throw Error('Team brochure relative URL base is not a valid URL stub')
+        }
+        team.teamPhotoUrl = applyRelativeUrlCorrection(team.teamPhotoUrl, props.correctRelativeUrlBase);
+        team.teamPhotoUrl = applyRelativeUrlCorrection(team.teamPhotoUrl, props.correctRelativeUrlBase);
+        team.presentationVideoUrl = applyRelativeUrlCorrection(team.presentationVideoUrl, props.correctRelativeUrlBase);
+        team.presentationSlideshowUrl = applyRelativeUrlCorrection(team.presentationSlideshowUrl, props.correctRelativeUrlBase);
+        team.posterUrl = applyRelativeUrlCorrection(team.posterUrl, props.correctRelativeUrlBase);
+        team.extraContentUrls = team.extraContentUrls.map(url => applyRelativeUrlCorrection(url, props.correctRelativeUrlBase!));
+    }
+
     return (<>
         <div className="p-5 grid grid-cols-1 gap-4">
 
