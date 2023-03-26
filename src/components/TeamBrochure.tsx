@@ -253,7 +253,7 @@ export function FileDisplay(props: FileDisplayProps) {
     <div className="flex flex-col h-full items-center justify-center">
         <div className='flex flex-row items-center justify-center'>
             <div className='text-4xl font-bold text-center text-[#231F20]'>{props.title}</div>
-            {props.url
+            {!!props.url
                 ? (
                     <div className='pl-2'>
                         <a className='flex flex-row group relative' href={props.url} target="_blank" rel="noopener noreferrer">
@@ -272,7 +272,7 @@ export function FileDisplay(props: FileDisplayProps) {
         <div className={`flex-1 ${className}`}>
             <EmbedFileUrl url={props.url} width={props.width} height={props.height}>
                 <div className='flex flex-col text-center justify-center bg-slate-100 w-[100%] h-[100%]'>
-                    {props.url 
+                    {!!props.url 
                         ? (<>
                             <p>We're sorry, but the file could not be displayed</p>
                             <a href={props.url} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Open file in new tab</a>
@@ -319,21 +319,26 @@ export function TeamBrochure( props: TeamBrochureProps ) {
             </div>
 
             {/* Expo file grid */}
-            <div className='pt-5 grid grid-cols-3 lg:grid-cols-2 grid-flow-row gap-6 p-8'>
+            <div className='pt-5 grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 p-8'>
+
                 {/* Poster */}
-                <div className="col-span-3 h-[500px] lg:col-span-1 lg:h-[800px] row-span-2">
-                    <FileDisplay title="Poster" url={props.team.posterUrl} className="w-full"/>
+                <div className={"col-span-1 h-[500px] lg:h-[800px] row-span-1 " + ((!!props.team.presentationSlideshowUrl || !!props.team.presentationVideoUrl) ? "lg:col-span-1" : "lg:col-span-2") + " " + ((!!props.team.presentationSlideshowUrl && !!props.team.presentationVideoUrl) ? "row-span-2": "row-span-1")}>
+                    <FileDisplay title="Poster" url={props.team.posterUrl} className="w-full h-full" />
                 </div>
 
                 {/* Presentation Slideshow */}
-                <div className="col-span-3 h-[500px] lg:h-auto lg:col-span-1"> 
+                {(!!props.team.presentationSlideshowUrl) ? (<>
+                <div className="col-span-1 h-[500px] lg:h-auto"> 
                     <FileDisplay title="Presentation Slideshow" url={props.team.presentationSlideshowUrl} className="w-full h-full"/>
                 </div>
+                </>) : null}
 
                 {/* Presentation Video Recording */}
-                <div className="col-span-3 h-[500px] lg:h-auto lg:col-span-1">
+                {(!!props.team.presentationVideoUrl) ? (<>
+                <div className="col-span-1 h-[500px] lg:h-auto">
                     <FileDisplay title="Presentation Video" url={props.team.presentationVideoUrl} className="w-full h-full" />
                 </div>
+                </>) : null}
             </div>
 
             {/* Extra files */}

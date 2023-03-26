@@ -42,6 +42,7 @@ const team: Team = {
   // presentationVideoUrl: "https://2050today.org/wp-content/uploads/2020/07/Video-Placeholder.mp4",
   // presentationVideoUrl: "",
   presentationSlideshowUrl: "https://isotropic.org/papers/chicken.pdf",
+  // presentationSlideshowUrl: "",
   posterUrl: "https://isotropic.org/papers/chicken.pdf",
   projectTitle: lorem.generateWords(5),
   teamShortName: lorem.generateWords(1),
