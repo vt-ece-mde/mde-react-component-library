@@ -1,4 +1,4 @@
-import { Person, SME, Sponsor, Team, TeamMember } from "@/interfaces";
+import { Person, SME, Sponsor, Team, TeamMember } from "../interfaces";
 import React from "react";
 
 
