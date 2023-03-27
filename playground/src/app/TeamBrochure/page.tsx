@@ -45,7 +45,8 @@ const team: Team = {
   // presentationSlideshowUrl: "",
   posterUrl: "https://isotropic.org/papers/chicken.pdf",
   projectTitle: lorem.generateWords(5),
-  teamShortName: lorem.generateWords(1),
+  year: lorem.generateWords(1),
+  term: lorem.generateWords(1),
   extraContentUrls: [
     "https://cataas.com/cat",
     "https://www.youtube.com/watch?v=oznr-1-poSU&ab_channel=DiviExtended",

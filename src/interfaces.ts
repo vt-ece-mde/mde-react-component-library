@@ -25,6 +25,8 @@ export interface Sponsor {
 
 export interface Team
 {
+    year: string; // "2023".
+    term: string; // "spring".
     teamMembers: TeamMember[];
     sponsors: Sponsor[];
     smes: SME[];
@@ -35,6 +37,5 @@ export interface Team
     presentationSlideshowUrl: string; // Expo presentation slideshow.
     posterUrl: string; // Expo poster.
     projectTitle: string; // Full name of project (70 char limit).
-    teamShortName: string; // This is a short-hand name used for the team (should not contain spaces or special characters).
     extraContentUrls: string[]; // List of URLs to extra content files.
 }
