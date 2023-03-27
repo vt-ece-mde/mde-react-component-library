@@ -1,6 +1,7 @@
 import { LoremIpsum } from 'lorem-ipsum';
 import { TeamBrochure } from 'mde-react-component-library'; // Components
-import type { Team, TeamMember, Sponsor, SME } from 'mde-react-component-library'; // Types
+import { SME, Sponsor, Team, TeamMember } from 'mde-typescript-library';
+// import type { Team, TeamMember, Sponsor, SME } from 'mde-react-component-library'; // Types
 
 const lorem = new LoremIpsum({})
 

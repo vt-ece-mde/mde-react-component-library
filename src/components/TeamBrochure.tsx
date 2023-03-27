@@ -1,4 +1,5 @@
-import { Person, SME, Sponsor, Team, TeamMember } from "../interfaces";
+// import { Person, SME, Sponsor, Team, TeamMember } from "../interfaces";
+import { Person, SME, Sponsor, Team, TeamMember } from 'mde-typescript-library';
 import React from "react";
 
 

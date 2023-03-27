@@ -15,6 +15,7 @@
     "autoprefixer": "file:../node_modules/autoprefixer",
     "lorem-ipsum": "^2.0.8",
     "mde-react-component-library": "file:..",
+    "mde-typescript-library": "github:vt-ece-mde/mde-typescript-library",
     "next": "13.2.4",
     "postcss": "file:../node_modules/postcss",
     "react": "file:../node_modules/react",

@@ -51,5 +51,8 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "mde-typescript-library": "github:vt-ece-mde/mde-typescript-library"
   }
 }
